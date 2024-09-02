@@ -1,9 +1,9 @@
 {
-  "name": "ts-lib-template",
+  "name": "limon-fez",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:ducktrshessami/ts-lib-template.git",
+  "repository": "git@github.com:ducktrshessami/limon-fez.git",
   "author": "ducktrshessami",
   "license": "MIT",
   "scripts": {
