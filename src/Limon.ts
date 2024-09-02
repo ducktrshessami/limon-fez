@@ -1,9 +1,22 @@
 import { Entry, getDict } from "node-cmudict";
-import Singleton from "./Singleton";
 
-export default class Limon extends Singleton {
-    private _dict: Map<string, Entry> | null = null;
-    public readonly cache: Map<string, Set<Entry>> = new Map();
+export default class Limon {
+    private static _instance: Limon;
+
+    private _dict: Map<string, Entry> | null;
+    public readonly cache: Map<string, Set<Entry>>;
+
+    private constructor() {
+        this._dict = null;
+        this.cache = new Map<string, Set<Entry>>();
+    }
+
+    public static getInstance(): Limon {
+        if (!Limon._instance) {
+            Limon._instance = new Limon();
+        }
+        return Limon._instance;
+    }
 
     public get dict() {
         return this._dict;
