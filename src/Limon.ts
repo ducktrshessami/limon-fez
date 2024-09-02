@@ -11,6 +11,9 @@ export default class Limon {
         this.cache = new Map<string, Set<Entry>>();
     }
 
+    /**
+     * Get the singleton instance of the class.
+     */
     public static getInstance(): Limon {
         if (!Limon._instance) {
             Limon._instance = new Limon();
