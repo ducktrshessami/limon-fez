@@ -1,0 +1,22 @@
+{
+  "name": "ts-lib-template",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "git@github.com:ducktrshessami/ts-lib-template.git",
+  "author": "ducktrshessami",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup"
+  },
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.js",
+    "import": "./dist/index.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
+  }
+}
