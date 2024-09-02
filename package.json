@@ -14,7 +14,9 @@
     "require": "./dist/index.js",
     "import": "./dist/index.mjs"
   },
-  "dependencies": {},
+  "dependencies": {
+    "node-cmudict": "ducktrshessami/node-cmudict#v2.0.0"
+  },
   "devDependencies": {
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
