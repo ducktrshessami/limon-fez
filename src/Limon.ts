@@ -61,7 +61,7 @@ export default class Limon {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
                 const set = this.ensureCache(fez.lastSyllable);
-                if (!setSome(set, other => other.pronunciation == pronunciation)) {
+                if (!setSome(set, other => pronunciation.equals(other.pronunciation))) {
                     set.add(fez);
                 }
             }
