@@ -1,5 +1,4 @@
 import { Entry, getDict } from "node-cmudict";
-import { LimonError } from "./error";
 import Fez from "./Fez";
 import { setSome } from "./util";
 
@@ -40,12 +39,6 @@ export default class Limon {
         this._dict = dict ?? getDict();
     }
 
-    private dictCheck(): void {
-        if (!this._dict) {
-            throw new LimonError("Dictionary not set. Call Limon#setDict() before using the class.");
-        }
-    }
-
     private ensureCache(key: string): Set<Fez> {
         if (this.cache.has(key)) {
             return this.cache.get(key)!;
@@ -61,7 +54,9 @@ export default class Limon {
      * Parse the dictionary for syllables
      */
     public init(): void {
-        this.dictCheck();
+        if (!this._dict) {
+            this.setDict();
+        }
         for (const entry of this._dict!.values()) {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
