@@ -6,9 +6,11 @@ export default class Fez {
     constructor(public readonly pronunciation: Pronunciation) {
         this.syllables = [];
         let syllable: Phoneme[] = [];
+        let excess: Phoneme[] = [];
         for (const phoneme of this.pronunciation.phonemes) {
             if (phoneme.stress != null) {
                 if (syllable.length) {
+                    excess = [];
                     this.syllables.push(syllable.join(" "));
                 }
                 syllable = [phoneme];
@@ -16,9 +18,12 @@ export default class Fez {
             else if (syllable[0]?.stress && syllable[0].stress <= syllable.length) {
                 syllable.push(phoneme);
             }
+            else {
+                excess.push(phoneme);
+            }
         }
         if (syllable.length) {
-            this.syllables.push(syllable.join(" "));
+            this.syllables.push(syllable.concat(excess).join(" "));
         }
     }
 
