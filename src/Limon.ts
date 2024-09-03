@@ -1,14 +1,17 @@
 import { Entry, getDict } from "node-cmudict";
+import { LimonError } from "./error";
+import Fez from "./Fez";
+import { setSome } from "./util";
 
 export default class Limon {
     private static _instance: Limon;
 
     private _dict: Map<string, Entry> | null;
-    public readonly cache: Map<string, Set<Entry>>;
+    public readonly cache: Map<string, Set<Fez>>;
 
     private constructor() {
         this._dict = null;
-        this.cache = new Map<string, Set<Entry>>();
+        this.cache = new Map<string, Set<Fez>>();
     }
 
     /**
@@ -25,11 +28,48 @@ export default class Limon {
         return this._dict;
     }
 
+    public get initialized(): boolean {
+        return Boolean(this._dict && this.cache.size);
+    }
+
     /**
-     * Initialize the instance with a cmudict dictionary. Overwrites the current dictionary if it exists.
+     * Set the cmudict dictionary. Overwrites the current dictionary if it exists.
      * @param dict The dictionary to use. Defaults to getting a new cmudict dictionary.
      */
-    public init(dict?: Map<string, Entry>): void {
+    public setDict(dict?: Map<string, Entry>): void {
         this._dict = dict ?? getDict();
+    }
+
+    private dictCheck(): void {
+        if (!this._dict) {
+            throw new LimonError("Dictionary not initialized. Call Limon#init() before using the class.");
+        }
+    }
+
+    private ensureCache(key: string): Set<Fez> {
+        if (this.cache.has(key)) {
+            return this.cache.get(key)!;
+        }
+        else {
+            const value = new Set<Fez>();
+            this.cache.set(key, value);
+            return value;
+        }
+    }
+
+    /**
+     * Parse the dictionary for syllables
+     */
+    public init(): void {
+        this.dictCheck();
+        for (const entry of this._dict!.values()) {
+            for (const pronunciation of entry.pronunciations) {
+                const fez = new Fez(pronunciation);
+                const set = this.ensureCache(fez.lastSyllable);
+                if (!setSome(set, other => other.pronunciation == pronunciation)) {
+                    set.add(fez);
+                }
+            }
+        }
     }
 }

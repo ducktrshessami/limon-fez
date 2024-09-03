@@ -1,13 +1,8 @@
-export function ensure<Key, Value>(
-    map: Map<Key, Value>,
-    key: Key,
-    value: Value
-): Value {
-    if (map.has(key)) {
-        return map.get(key)!;
+export function setSome<T>(set: Set<T>, predicate: (value: T) => boolean): boolean {
+    for (const value of set) {
+        if (predicate(value)) {
+            return true;
+        }
     }
-    else {
-        map.set(key, value);
-        return value;
-    }
+    return false;
 }
