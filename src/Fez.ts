@@ -27,6 +27,10 @@ export default class Fez {
         }
     }
 
+    public get syllableCount(): number {
+        return this.syllables.length;
+    }
+
     public get lastSyllable(): string {
         return this.syllables[this.syllables.length - 1];
     }
