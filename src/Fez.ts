@@ -25,4 +25,10 @@ export default class Fez {
     public get lastSyllable(): string {
         return this.syllables[this.syllables.length - 1];
     }
+
+    public *reverseSyllables(): Generator<string> {
+        for (let i = this.syllables.length - 1; i >= 0; i--) {
+            yield this.syllables[i];
+        }
+    }
 }
