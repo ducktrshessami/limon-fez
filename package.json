@@ -15,7 +15,7 @@
     "import": "./dist/index.mjs"
   },
   "dependencies": {
-    "node-cmudict": "ducktrshessami/node-cmudict#v2.0.0"
+    "node-cmudict": "ducktrshessami/node-cmudict#v2.1.0"
   },
   "devDependencies": {
     "tsup": "^8.2.4",

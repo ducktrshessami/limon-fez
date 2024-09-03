@@ -734,11 +734,11 @@ mz@^2.7.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-node-cmudict@ducktrshessami/node-cmudict#v2.0.0:
-  version "2.0.0"
-  resolved "https://codeload.github.com/ducktrshessami/node-cmudict/tar.gz/fb15ff5f3bad0de5ecf399cb619786a9213a3e87"
+node-cmudict@ducktrshessami/node-cmudict#v2.1.0:
+  version "2.1.0"
+  resolved "https://codeload.github.com/ducktrshessami/node-cmudict/tar.gz/57e32357fde2a4a316d0d09b3dc2871c67877d1b"
   dependencies:
-    tar-fs "^3.0.5"
+    tar-fs "^3.0.6"
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -999,7 +999,7 @@ sucrase@^3.35.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-tar-fs@^3.0.5:
+tar-fs@^3.0.6:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/tar-fs/-/tar-fs-3.0.6.tgz#eaccd3a67d5672f09ca8e8f9c3d2b89fa173f217"
   integrity sha512-iokBDQQkUyeXhgPYaZxmczGPhnhXZ0CmrqI+MOb/WFGS9DW5wnfrLgtjUJBvz50vQ3qfRwJ62QVoCFu8mPVu5w==
