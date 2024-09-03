@@ -42,7 +42,7 @@ export default class Limon {
 
     private dictCheck(): void {
         if (!this._dict) {
-            throw new LimonError("Dictionary not initialized. Call Limon#init() before using the class.");
+            throw new LimonError("Dictionary not set. Call Limon#setDict() before using the class.");
         }
     }
 
