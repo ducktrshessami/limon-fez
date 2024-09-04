@@ -60,9 +60,11 @@ export default class Limon {
         for (const entry of this._dict!.values()) {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
-                const set = this.ensureCache(fez.lastSyllable);
-                if (!setSome(set, other => pronunciation.equals(other.pronunciation))) {
-                    set.add(fez);
+                if (fez.syllableCount === 1) {
+                    const set = this.ensureCache(fez.lastSyllable);
+                    if (!setSome(set, other => pronunciation.equals(other.pronunciation))) {
+                        set.add(fez);
+                    }
                 }
             }
         }
