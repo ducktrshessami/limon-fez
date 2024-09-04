@@ -2,6 +2,7 @@ import { Phoneme, Pronunciation } from "node-cmudict";
 
 export default class Fez {
     public readonly syllables: string[];
+    public readonly lastRawSyllable: string;
 
     constructor(public readonly pronunciation: Pronunciation) {
         this.syllables = [];
@@ -23,7 +24,12 @@ export default class Fez {
             }
         }
         if (syllable.length) {
-            this.syllables.push(syllable.concat(excess).join(" "));
+            this.lastRawSyllable = syllable.concat(excess).join(" ");
+            this.syllables.push(syllable.join(" "));
+        }
+        else { // Some donkus decided to create a pronunciation with no stressed phonemes
+            this.lastRawSyllable = this.pronunciation.phonemes.join(" ");
+            this.syllables = [this.lastRawSyllable];
         }
     }
 
