@@ -1,16 +1,16 @@
 import { Entry, getDict } from "node-cmudict";
+import Cache from "./Cache";
 import Fez from "./Fez";
-import { setSome } from "./util";
 
 export default class Limon {
     private static _instance: Limon;
 
     private _dict: Map<string, Entry> | null;
-    public readonly cache: Map<string, Set<Fez>>;
+    public readonly cache: Map<string, Cache<Fez>>;
 
     private constructor() {
         this._dict = null;
-        this.cache = new Map<string, Set<Fez>>();
+        this.cache = new Map<string, Cache<Fez>>();
     }
 
     /**
@@ -39,12 +39,12 @@ export default class Limon {
         this._dict = dict ?? getDict();
     }
 
-    private ensureCache(key: string): Set<Fez> {
+    private ensureCache(key: string): Cache<Fez> {
         if (this.cache.has(key)) {
             return this.cache.get(key)!;
         }
         else {
-            const value = new Set<Fez>();
+            const value = new Cache<Fez>();
             this.cache.set(key, value);
             return value;
         }
@@ -62,7 +62,7 @@ export default class Limon {
                 const fez = new Fez(pronunciation);
                 if (fez.syllableCount === 1) {
                     const set = this.ensureCache(fez.lastSyllable);
-                    if (!setSome(set, other => pronunciation.equals(other.pronunciation))) {
+                    if (!set.some(other => pronunciation.equals(other.pronunciation))) {
                         set.add(fez);
                     }
                 }
