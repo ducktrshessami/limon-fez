@@ -24,6 +24,6 @@ export default class Cache<T> extends Set<T> {
         for (let i = 0; i < index; i++) {
             it.next();
         }
-        return it.next().value;
+        return it.next().value ?? null;
     }
 }
