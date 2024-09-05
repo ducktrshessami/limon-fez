@@ -61,6 +61,11 @@ export default class Limon {
         }
     }
 
+    /**
+     * Limon fez!
+     * @param word The word to nonsensify
+     * @param force Whether to skip the cache. Defaults to false.
+     */
     public exec(word: string, force: boolean = false): string | null {
         if (!this.initialized) {
             this.init();
