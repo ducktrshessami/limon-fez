@@ -1,4 +1,4 @@
-export default class Cache<T> extends Set<T> {
+export default class DataSet<T> extends Set<T> {
     some(predicate: (value: T) => unknown): boolean {
         for (const value of this) {
             if (predicate(value)) {
@@ -8,8 +8,8 @@ export default class Cache<T> extends Set<T> {
         return false;
     }
 
-    filter(predicate: (value: T) => unknown): Cache<T> {
-        const result = new Cache<T>();
+    filter(predicate: (value: T) => unknown): DataSet<T> {
+        const result = new DataSet<T>();
         for (const item of this) {
             if (predicate(item)) {
                 result.add(item);

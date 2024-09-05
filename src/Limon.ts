@@ -1,16 +1,18 @@
 import { Entry, getDict } from "node-cmudict";
-import Cache from "./Cache";
+import DataSet from "./DataSet";
 import Fez from "./Fez";
 
 export default class Limon {
     private static _instance: Limon;
 
     private _dict: Map<string, Entry> | null;
-    public readonly cache: Map<string, Cache<Fez>>;
+    public readonly rhymeData: Map<string, DataSet<Fez>>;
+    public readonly cache: Map<string, DataSet<Fez>>;
 
     private constructor() {
         this._dict = null;
-        this.cache = new Map<string, Cache<Fez>>();
+        this.rhymeData = new Map<string, DataSet<Fez>>();
+        this.cache = new Map<string, DataSet<Fez>>();
     }
 
     /**
@@ -28,7 +30,7 @@ export default class Limon {
     }
 
     public get initialized(): boolean {
-        return Boolean(this._dict && this.cache.size);
+        return Boolean(this._dict && this.rhymeData.size);
     }
 
     /**
@@ -39,13 +41,13 @@ export default class Limon {
         this._dict = dict ?? getDict();
     }
 
-    private ensureCache(key: string): Cache<Fez> {
-        if (this.cache.has(key)) {
-            return this.cache.get(key)!;
+    private ensureCache(key: string): DataSet<Fez> {
+        if (this.rhymeData.has(key)) {
+            return this.rhymeData.get(key)!;
         }
         else {
-            const value = new Cache<Fez>();
-            this.cache.set(key, value);
+            const value = new DataSet<Fez>();
+            this.rhymeData.set(key, value);
             return value;
         }
     }
@@ -79,17 +81,17 @@ export default class Limon {
         if (!entry) {
             return null;
         }
-        const variations = new Cache<string>();
+        const variations = new DataSet<string>();
         for (const pronunciation of entry.pronunciations) {
             const fez = new Fez(pronunciation);
             let output = "";
             let valid = true;
             for (let i = 0; i < fez.syllableCount; i++) {
-                const cached = this.cache.get(fez.syllables[i]);
-                if (cached) {
+                const data = this.rhymeData.get(fez.syllables[i]);
+                if (data) {
                     const rhymes = i === fez.syllableCount - 1 ?
-                        cached.filter(other => other.lastRawSyllable === fez.lastRawSyllable) :
-                        cached;
+                        data.filter(other => other.lastRawSyllable === fez.lastRawSyllable) :
+                        data;
                     const match = rhymes.random();
                     if (match) {
                         output += match.pronunciation.entry.name;
