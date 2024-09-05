@@ -9,7 +9,6 @@ Generate a random, nonsense phrase that rhymes with an input string using [cmusp
 ```ts
 import { Limon } from "limon-fez";
 
-// Main usage
 const limon = Limon.getInstance();
 
 // [OPTIONAL] Set a custom dictionary
