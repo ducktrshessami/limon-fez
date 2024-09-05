@@ -4,6 +4,10 @@ export default class Fez {
     public readonly syllables: string[];
     public readonly lastRawSyllable: string;
 
+    private static formatSyllable(syllable: Phoneme[]): string {
+        return syllable.map(phoneme => phoneme.phoneme).join(" ");
+    }
+
     constructor(public readonly pronunciation: Pronunciation) {
         this.syllables = [];
         let syllable: Phoneme[] = [];
@@ -12,7 +16,7 @@ export default class Fez {
             if (phoneme.stress != null) {
                 if (syllable.length) {
                     excess = [];
-                    this.syllables.push(syllable.join(" "));
+                    this.syllables.push(Fez.formatSyllable(syllable));
                 }
                 syllable = [phoneme];
             }
@@ -24,8 +28,8 @@ export default class Fez {
             }
         }
         if (syllable.length) {
-            this.lastRawSyllable = syllable.concat(excess).join(" ");
-            this.syllables.push(syllable.join(" "));
+            this.lastRawSyllable = Fez.formatSyllable(syllable.concat(excess));
+            this.syllables.push(Fez.formatSyllable(syllable));
         }
         else { // Some donkus decided to create a pronunciation with no stressed phonemes
             this.lastRawSyllable = this.pronunciation.phonemes.join(" ");
