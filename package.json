@@ -1,6 +1,6 @@
 {
   "name": "limon-fez",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate a random, nonsense phrase that rhymes with an input string",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
