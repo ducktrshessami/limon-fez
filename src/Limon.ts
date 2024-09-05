@@ -69,4 +69,43 @@ export default class Limon {
             }
         }
     }
+
+    public exec(word: string): string | null {
+        if (!this.initialized) {
+            this.init();
+        }
+        const formatted = word.trim().toLowerCase();
+        const entry = this._dict!.get(formatted);
+        if (!entry) {
+            return null;
+        }
+        const variations = new Cache<string>();
+        for (const pronunciation of entry.pronunciations) {
+            const fez = new Fez(pronunciation);
+            let output = "";
+            let valid = true;
+            for (let i = 0; i < fez.syllableCount; i++) {
+                const cached = this.cache.get(fez.syllables[i]);
+                if (cached) {
+                    const rhymes = i === fez.syllableCount - 1 ?
+                        cached.filter(other => other.lastRawSyllable === fez.lastRawSyllable) :
+                        cached;
+                    const match = rhymes.random();
+                    if (match) {
+                        output += match.pronunciation.entry.name;
+                    }
+                    else {
+                        valid = false;
+                    }
+                }
+                else {
+                    valid = false;
+                }
+            }
+            if (valid) {
+                variations.add(output);
+            }
+        }
+        return variations.random();
+    }
 }
