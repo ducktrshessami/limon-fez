@@ -6,5 +6,6 @@ export default defineConfig({
     dts: true,
     sourcemap: true,
     format: ["cjs", "esm"],
-    minify: true
+    minifySyntax: true,
+    minifyWhitespace: true
 });
