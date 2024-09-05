@@ -27,3 +27,9 @@ export default class DataSet<T> extends Set<T> {
         return it.next().value ?? null;
     }
 }
+
+export function ensureDataSet<K, T>(map: Map<K, DataSet<T>>, key: K): DataSet<T> {
+    const set = map.get(key) ?? new DataSet<T>();
+    map.set(key, set);
+    return set;
+}

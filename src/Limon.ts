@@ -1,5 +1,5 @@
 import { Entry, getDict } from "node-cmudict";
-import DataSet from "./DataSet";
+import DataSet, { ensureDataSet } from "./DataSet";
 import Fez from "./Fez";
 
 export default class Limon {
@@ -41,28 +41,6 @@ export default class Limon {
         this._dict = dict ?? getDict();
     }
 
-    private ensureRhymeData(key: string): DataSet<Fez> {
-        if (this.rhymeData.has(key)) {
-            return this.rhymeData.get(key)!;
-        }
-        else {
-            const value = new DataSet<Fez>();
-            this.rhymeData.set(key, value);
-            return value;
-        }
-    }
-
-    private ensureCache(key: string): DataSet<string> {
-        if (this.cache.has(key)) {
-            return this.cache.get(key)!;
-        }
-        else {
-            const value = new DataSet<string>();
-            this.cache.set(key, value);
-            return value;
-        }
-    }
-
     /**
      * Parse the dictionary for syllables
      */
@@ -74,7 +52,7 @@ export default class Limon {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
                 if (fez.syllableCount === 1) {
-                    const set = this.ensureRhymeData(fez.lastSyllable);
+                    const set = ensureDataSet(this.rhymeData, fez.lastSyllable);
                     if (!set.some(other => pronunciation.equals(other.pronunciation))) {
                         set.add(fez);
                     }
@@ -98,7 +76,7 @@ export default class Limon {
         if (!entry) {
             return null;
         }
-        const variations = this.ensureCache(formatted);
+        const variations = ensureDataSet(this.cache, formatted);
         for (const pronunciation of entry.pronunciations) {
             const fez = new Fez(pronunciation);
             let output = "";
