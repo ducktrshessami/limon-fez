@@ -26,3 +26,7 @@ console.log(limon.exec("halo")); // E.g. "gaylo"
 #### Why is it called limon-fez?
 
 "It's a nonsense bit I do to subvert conversation as conversations continue to depreciate in value in an age of comprehension and attention deficiencies." → Downward Spiral → spiral energy → Simon → Simon Says → Limon Fez
+
+#### Is this really a FAQ? It looks like I'm the first person other than you to even see this repo, so how would these be _frequently_ asked?
+
+C:
