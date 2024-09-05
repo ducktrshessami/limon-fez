@@ -1,17 +1,17 @@
 export default class DataSet<T> extends Set<T> {
-    some(predicate: (value: T) => unknown): boolean {
+    some(predicate: (value: T, set: DataSet<T>) => unknown): boolean {
         for (const value of this) {
-            if (predicate(value)) {
+            if (predicate(value, this)) {
                 return true;
             }
         }
         return false;
     }
 
-    filter(predicate: (value: T) => unknown): DataSet<T> {
+    filter(predicate: (value: T, set: DataSet<T>) => unknown): DataSet<T> {
         const result = new DataSet<T>();
         for (const item of this) {
-            if (predicate(item)) {
+            if (predicate(item, this)) {
                 result.add(item);
             }
         }
