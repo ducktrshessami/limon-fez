@@ -83,16 +83,22 @@ export default class Limon {
         }
     }
 
-    public exec(word: string): string | null {
+    public exec(word: string, force: boolean = false): string | null {
         if (!this.initialized) {
             this.init();
         }
         const formatted = word.trim().toLowerCase();
+        if (!force) {
+            const cached = this.cache.get(formatted);
+            if (cached) {
+                return cached.random();
+            }
+        }
         const entry = this._dict!.get(formatted);
         if (!entry) {
             return null;
         }
-        const variations = new DataSet<string>();
+        const variations = this.ensureCache(formatted);
         for (const pronunciation of entry.pronunciations) {
             const fez = new Fez(pronunciation);
             let output = "";
