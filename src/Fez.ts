@@ -15,10 +15,10 @@ export default class Fez {
         for (const phoneme of this.pronunciation.phonemes) {
             if (phoneme.stress != null) {
                 if (syllable.length) {
-                    excess = [];
                     this.syllables.push(Fez.formatSyllable(syllable));
                 }
                 syllable = [phoneme];
+                excess = [];
             }
             else if (syllable[0]?.stress && syllable[0].stress < syllable.length) {
                 syllable.push(phoneme);
