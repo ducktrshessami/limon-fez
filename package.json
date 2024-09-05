@@ -1,6 +1,7 @@
 {
   "name": "limon-fez",
   "version": "0.1.0",
+  "description": "Generate a random, nonsense phrase that rhymes with an input string",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:ducktrshessami/limon-fez.git",
