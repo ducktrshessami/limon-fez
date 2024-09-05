@@ -7,12 +7,12 @@ export default class Limon {
 
     private _dict: Map<string, Entry> | null;
     public readonly rhymeData: Map<string, DataSet<Fez>>;
-    public readonly cache: Map<string, DataSet<Fez>>;
+    public readonly cache: Map<string, DataSet<string>>;
 
     private constructor() {
         this._dict = null;
         this.rhymeData = new Map<string, DataSet<Fez>>();
-        this.cache = new Map<string, DataSet<Fez>>();
+        this.cache = new Map<string, DataSet<string>>();
     }
 
     /**
@@ -41,13 +41,24 @@ export default class Limon {
         this._dict = dict ?? getDict();
     }
 
-    private ensureCache(key: string): DataSet<Fez> {
+    private ensureRhymeData(key: string): DataSet<Fez> {
         if (this.rhymeData.has(key)) {
             return this.rhymeData.get(key)!;
         }
         else {
             const value = new DataSet<Fez>();
             this.rhymeData.set(key, value);
+            return value;
+        }
+    }
+
+    private ensureCache(key: string): DataSet<string> {
+        if (this.cache.has(key)) {
+            return this.cache.get(key)!;
+        }
+        else {
+            const value = new DataSet<string>();
+            this.cache.set(key, value);
             return value;
         }
     }
@@ -63,7 +74,7 @@ export default class Limon {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
                 if (fez.syllableCount === 1) {
-                    const set = this.ensureCache(fez.lastSyllable);
+                    const set = this.ensureRhymeData(fez.lastSyllable);
                     if (!set.some(other => pronunciation.equals(other.pronunciation))) {
                         set.add(fez);
                     }
