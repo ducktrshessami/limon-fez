@@ -7,12 +7,10 @@ export default class Limon {
 
     private _dict: Map<string, Entry> | null;
     public readonly rhymeData: Map<string, DataSet<Fez>>;
-    public readonly cache: Map<string, DataSet<string>>;
 
     private constructor() {
         this._dict = null;
         this.rhymeData = new Map<string, DataSet<Fez>>();
-        this.cache = new Map<string, DataSet<string>>();
     }
 
     /**
@@ -64,24 +62,17 @@ export default class Limon {
     /**
      * Limon fez!
      * @param word The word to nonsensify
-     * @param force Whether to skip the cache. Defaults to false.
      */
-    public exec(word: string, force: boolean = false): string | null {
+    public exec(word: string): string | null {
         if (!this.initialized) {
             this.init();
         }
         const formatted = word.trim().toLowerCase();
-        if (!force) {
-            const cached = this.cache.get(formatted);
-            if (cached) {
-                return cached.random();
-            }
-        }
         const entry = this._dict!.get(formatted);
         if (!entry) {
             return null;
         }
-        const variations = ensureDataSet(this.cache, formatted);
+        const variations = new DataSet<string>();
         for (const pronunciation of entry.pronunciations) {
             const fez = new Fez(pronunciation);
             let output: string[] = [];
