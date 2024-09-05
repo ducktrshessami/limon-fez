@@ -52,9 +52,9 @@ export default class Limon {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
                 if (fez.syllableCount === 1) {
-                    const set = ensureDataSet(this.rhymeData, fez.lastSyllable);
-                    if (!set.some(other => pronunciation.equals(other.pronunciation))) {
-                        set.add(fez);
+                    const data = ensureDataSet(this.rhymeData, fez.lastSyllable);
+                    if (!data.some(other => pronunciation.equals(other.pronunciation))) {
+                        data.add(fez);
                     }
                 }
             }
@@ -79,8 +79,7 @@ export default class Limon {
         const variations = ensureDataSet(this.cache, formatted);
         for (const pronunciation of entry.pronunciations) {
             const fez = new Fez(pronunciation);
-            let output = "";
-            let valid = true;
+            let output: string[] = [];
             for (let i = 0; i < fez.syllableCount; i++) {
                 const data = this.rhymeData.get(fez.syllables[i]);
                 if (data) {
@@ -89,18 +88,18 @@ export default class Limon {
                         data;
                     const match = rhymes.random();
                     if (match) {
-                        output += match.pronunciation.entry.name;
+                        output.push(match.pronunciation.entry.name);
                     }
                     else {
-                        valid = false;
+                        break;
                     }
                 }
                 else {
-                    valid = false;
+                    break;
                 }
             }
-            if (valid) {
-                variations.add(output);
+            if (output.length === fez.syllableCount) {
+                variations.add(output.join(""));
             }
         }
         return variations.random();
