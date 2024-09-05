@@ -20,7 +20,7 @@ export default class Fez {
                 syllable = [phoneme];
                 excess = [];
             }
-            else if (syllable[0]?.stress && syllable[0].stress < syllable.length) {
+            else if (syllable[0]?.stress && syllable.length <= syllable[0].stress) {
                 syllable.push(phoneme);
             }
             else {
