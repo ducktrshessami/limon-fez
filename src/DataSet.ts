@@ -1,17 +1,25 @@
 export default class DataSet<T> extends Set<T> {
-    some(predicate: (value: T, set: DataSet<T>) => unknown): boolean {
+    some(predicate: (value: T, set: this) => unknown): boolean;
+    some<This>(predicate: (this: This, value: T, set: this) => unknown, thisArg: This): boolean;
+    some(predicate: (value: T, set: this) => unknown, thisArg?: unknown): boolean {
+        const fn = thisArg === undefined ? predicate : predicate.bind(thisArg);
         for (const value of this) {
-            if (predicate(value, this)) {
+            if (fn(value, this)) {
                 return true;
             }
         }
         return false;
     }
 
-    filter(predicate: (value: T, set: DataSet<T>) => unknown): DataSet<T> {
+    filter(predicate: (value: T, set: this) => unknown): DataSet<T>;
+    filter<This>(predicate: (this: This, value: T, set: this) => unknown, thisArg: This): DataSet<T>;
+    filter<This, Type extends T>(predicate: (this: This, value: T, set: this) => value is Type, thisArg: This): DataSet<Type>;
+    filter<Type extends T>(predicate: (value: T, set: this) => value is Type): DataSet<Type>;
+    filter(predicate: (value: T, set: this) => unknown, thisArg?: unknown): DataSet<T> {
+        const fn = thisArg === undefined ? predicate : predicate.bind(thisArg);
         const result = new DataSet<T>();
         for (const item of this) {
-            if (predicate(item, this)) {
+            if (fn(item, this)) {
                 result.add(item);
             }
         }
