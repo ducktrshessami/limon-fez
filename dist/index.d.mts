@@ -1,8 +1,12 @@
 import { Pronunciation, Entry } from 'node-cmudict';
 
 declare class DataSet<T> extends Set<T> {
-    some(predicate: (value: T, set: DataSet<T>) => unknown): boolean;
-    filter(predicate: (value: T, set: DataSet<T>) => unknown): DataSet<T>;
+    some(predicate: (value: T, set: this) => unknown): boolean;
+    some<This>(predicate: (this: This, value: T, set: this) => unknown, thisArg: This): boolean;
+    filter(predicate: (value: T, set: this) => unknown): DataSet<T>;
+    filter<This>(predicate: (this: This, value: T, set: this) => unknown, thisArg: This): DataSet<T>;
+    filter<This, Type extends T>(predicate: (this: This, value: T, set: this) => value is Type, thisArg: This): DataSet<Type>;
+    filter<Type extends T>(predicate: (value: T, set: this) => value is Type): DataSet<Type>;
     random(): T | null;
 }
 
