@@ -1,6 +1,7 @@
 import { Phoneme } from "node-cmudict";
 import DataSet from "./DataSet";
 import Fez from "./Fez";
+import { mapEvery } from "./util";
 
 export type SyllableTreeNode = SyllableTreeRoot | SyllableTreeBranch;
 
@@ -9,6 +10,10 @@ abstract class BaseSyllableTreeNode {
 
     constructor() {
         this.children = new Map<string, SyllableTreeBranch>();
+    }
+
+    get empty(): boolean {
+        return mapEvery(this.children, child => child.empty);
     }
 
     public ensureChild(phoneme: string): SyllableTreeBranch {
@@ -47,5 +52,9 @@ export class SyllableTreeBranch extends BaseSyllableTreeNode {
     constructor(public readonly parent: SyllableTreeNode, public readonly phoneme: string) {
         super();
         this.leaves = new DataSet<Fez>();
+    }
+
+    get empty(): boolean {
+        return this.leaves.size === 0 && super.empty;
     }
 }
