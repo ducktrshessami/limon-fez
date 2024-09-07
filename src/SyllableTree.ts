@@ -17,9 +17,12 @@ export class SyllableTreeRoot {
         return child;
     }
 
-    public addLeaf(fez: Fez): this {
-        // TODO: implement
-        return this;
+    public addLeaves(fez: Fez): void {
+        if (fez.syllableCount !== 1) {
+            return;
+        }
+        const child = this.ensureChild(fez.lastRawSyllable[0].phoneme);
+        child.addLeaves(fez, 1);
     }
 }
 
@@ -29,5 +32,15 @@ export class SyllableTreeBranch extends SyllableTreeRoot {
     constructor(public readonly parent: SyllableTreeRoot | SyllableTreeBranch, public readonly phoneme: string) {
         super();
         this.leaves = new DataSet<Fez>();
+    }
+
+    public addLeaves(fez: Fez, index: number = 0): void {
+        if (index < fez.lastRawSyllable.length) {
+            const child = this.ensureChild(fez.lastRawSyllable[index].phoneme);
+            child.addLeaves(fez, index + 1);
+        }
+        else {
+            this.leaves.add(fez);
+        }
     }
 }
