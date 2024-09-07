@@ -34,6 +34,16 @@ export default class DataSet<T> extends Set<T> {
         }
         return it.next().value ?? null;
     }
+
+    concat(...sets: DataSet<T>[]): DataSet<T> {
+        const result = new DataSet<T>(this);
+        for (const set of sets) {
+            for (const item of set) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
 }
 
 export function ensureDataSet<K, T>(map: Map<K, DataSet<T>>, key: K): DataSet<T> {
