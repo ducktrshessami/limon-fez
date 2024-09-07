@@ -1,3 +1,4 @@
+import { Phoneme } from "node-cmudict";
 import DataSet from "./DataSet";
 import Fez from "./Fez";
 
@@ -29,6 +30,14 @@ export class SyllableTreeRoot extends BaseSyllableTreeNode {
             }
             node.leaves.add(fez);
         }
+    }
+
+    public getLeaves(phonemes: Phoneme[]): DataSet<Fez> {
+        let result = new DataSet<Fez>();
+        for (let i = 0, node = this.children.get(phonemes[i].phoneme); node && i < phonemes.length; i++, node = node.children.get(phonemes[i].phoneme)) {
+            result = result.concat(node.leaves);
+        }
+        return result;
     }
 }
 
