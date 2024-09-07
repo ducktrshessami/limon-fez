@@ -1,46 +1,42 @@
 import DataSet from "./DataSet";
 import Fez from "./Fez";
 
-export class SyllableTreeRoot {
+export type SyllableTreeNode = SyllableTreeRoot | SyllableTreeBranch;
+
+abstract class BaseSyllableTreeNode {
     public readonly children: Map<string, SyllableTreeBranch>;
 
     constructor() {
         this.children = new Map<string, SyllableTreeBranch>();
     }
 
-    protected ensureChild(phoneme: string): SyllableTreeBranch {
+    public ensureChild(phoneme: string): SyllableTreeBranch {
         let child = this.children.get(phoneme);
         if (!child) {
-            child = new SyllableTreeBranch(this, phoneme);
+            child = new SyllableTreeBranch(this as unknown as SyllableTreeNode, phoneme);
             this.children.set(phoneme, child);
         }
         return child;
     }
+}
 
+export class SyllableTreeRoot extends BaseSyllableTreeNode {
     public addLeaves(fez: Fez): void {
-        if (fez.syllableCount !== 1) {
-            return;
+        if (fez.syllableCount === 1 && fez.lastRawSyllable.length) {
+            let node: SyllableTreeBranch = this as unknown as SyllableTreeBranch;
+            for (const phoneme of fez.lastRawSyllable) {
+                node = node.ensureChild(phoneme.phoneme);
+            }
+            node.leaves.add(fez);
         }
-        const child = this.ensureChild(fez.lastRawSyllable[0].phoneme);
-        child.addLeaves(fez, 1);
     }
 }
 
-export class SyllableTreeBranch extends SyllableTreeRoot {
+export class SyllableTreeBranch extends BaseSyllableTreeNode {
     public readonly leaves: DataSet<Fez>;
 
-    constructor(public readonly parent: SyllableTreeRoot | SyllableTreeBranch, public readonly phoneme: string) {
+    constructor(public readonly parent: SyllableTreeNode, public readonly phoneme: string) {
         super();
         this.leaves = new DataSet<Fez>();
-    }
-
-    public addLeaves(fez: Fez, index: number = 0): void {
-        if (index < fez.lastRawSyllable.length) {
-            const child = this.ensureChild(fez.lastRawSyllable[index].phoneme);
-            child.addLeaves(fez, index + 1);
-        }
-        else {
-            this.leaves.add(fez);
-        }
     }
 }
