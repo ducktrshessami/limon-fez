@@ -27,7 +27,7 @@ abstract class BaseSyllableTreeNode {
 }
 
 export class SyllableTreeRoot extends BaseSyllableTreeNode {
-    public addLeaves(fez: Fez): void {
+    public add(fez: Fez): void {
         if (fez.syllableCount === 1 && fez.lastRawSyllable.length) {
             let node: SyllableTreeBranch = this as unknown as SyllableTreeBranch;
             for (const phoneme of fez.lastRawSyllable) {
@@ -37,9 +37,9 @@ export class SyllableTreeRoot extends BaseSyllableTreeNode {
         }
     }
 
-    public getLeaves(phonemes: Phoneme[]): DataSet<Fez> {
+    public get(syllable: Phoneme[]): DataSet<Fez> {
         let result = new DataSet<Fez>();
-        for (let i = 0, node = this.children.get(phonemes[i].phoneme); node && i < phonemes.length; i++, node = node.children.get(phonemes[i].phoneme)) {
+        for (let i = 0, node = this.children.get(syllable[i].phoneme); node && i < syllable.length; i++, node = node.children.get(syllable[i].phoneme)) {
             result = result.concat(node.leaves);
         }
         return result;

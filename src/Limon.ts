@@ -1,16 +1,17 @@
 import { Entry, getDict } from "node-cmudict";
-import DataSet, { ensureDataSet } from "./DataSet";
+import DataSet from "./DataSet";
 import Fez from "./Fez";
+import { SyllableTreeRoot } from "./SyllableTree";
 
 export default class Limon {
     private static _instance: Limon;
 
     private _dict: Map<string, Entry> | null;
-    public readonly rhymeData: Map<string, DataSet<Fez>>;
+    public readonly rhymeTree: SyllableTreeRoot;
 
     private constructor() {
         this._dict = null;
-        this.rhymeData = new Map<string, DataSet<Fez>>();
+        this.rhymeTree = new SyllableTreeRoot();
     }
 
     /**
@@ -28,7 +29,7 @@ export default class Limon {
     }
 
     public get initialized(): boolean {
-        return Boolean(this._dict && this.rhymeData.size);
+        return Boolean(this._dict && !this.rhymeTree.empty);
     }
 
     /**
@@ -49,12 +50,7 @@ export default class Limon {
         for (const entry of this._dict!.values()) {
             for (const pronunciation of entry.pronunciations) {
                 const fez = new Fez(pronunciation);
-                if (fez.syllableCount === 1) {
-                    const data = ensureDataSet(this.rhymeData, fez.lastSyllable);
-                    if (!data.some(other => pronunciation.equals(other.pronunciation))) {
-                        data.add(fez);
-                    }
-                }
+                this.rhymeTree.add(fez);
             }
         }
     }
@@ -77,18 +73,11 @@ export default class Limon {
             const fez = new Fez(pronunciation);
             let output: string[] = [];
             for (let i = 0; i < fez.syllableCount; i++) {
-                const data = this.rhymeData.get(fez.syllables[i]);
-                if (data) {
-                    const rhymes = i === fez.syllableCount - 1 ?
-                        data.filter(other => other.lastRawSyllable === fez.lastRawSyllable) :
-                        data;
-                    const match = rhymes.random();
-                    if (match) {
-                        output.push(match.pronunciation.entry.name);
-                    }
-                    else {
-                        break;
-                    }
+                const match = this.rhymeTree
+                    .get(fez.syllables[i])
+                    .random();
+                if (match) {
+                    output.push(match.pronunciation.entry.name);
                 }
                 else {
                     break;
