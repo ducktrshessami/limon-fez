@@ -1,12 +1,8 @@
 import { Phoneme, Pronunciation } from "node-cmudict";
 
 export default class Fez {
-    public readonly syllables: string[];
-    public readonly lastRawSyllable: string;
-
-    private static formatSyllable(syllable: Phoneme[]): string {
-        return syllable.map(phoneme => phoneme.phoneme).join(" ");
-    }
+    public readonly syllables: Phoneme[][];
+    public readonly lastRawSyllable: Phoneme[];
 
     constructor(public readonly pronunciation: Pronunciation) {
         this.syllables = [];
@@ -15,7 +11,7 @@ export default class Fez {
         for (const phoneme of this.pronunciation.phonemes) {
             if (phoneme.stress != null) {
                 if (syllable.length) {
-                    this.syllables.push(Fez.formatSyllable(syllable));
+                    this.syllables.push(syllable);
                 }
                 syllable = [phoneme];
                 excess = [];
@@ -28,20 +24,16 @@ export default class Fez {
             }
         }
         if (syllable.length) {
-            this.lastRawSyllable = Fez.formatSyllable(syllable.concat(excess));
-            this.syllables.push(Fez.formatSyllable(syllable));
+            this.lastRawSyllable = syllable.concat(excess);
+            this.syllables.push(syllable);
         }
         else { // Some donkus decided to create a pronunciation with no stressed phonemes
-            this.lastRawSyllable = this.pronunciation.phonemes.join(" ");
+            this.lastRawSyllable = this.pronunciation.phonemes;
             this.syllables = [this.lastRawSyllable];
         }
     }
 
     public get syllableCount(): number {
         return this.syllables.length;
-    }
-
-    public get lastSyllable(): string {
-        return this.syllables[this.syllables.length - 1];
     }
 }
